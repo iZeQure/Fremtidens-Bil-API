@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Fremtidens_Bil_API.Data;
+using Fremtidens_Bil_API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fremtidens_Bil_API.Controllers
