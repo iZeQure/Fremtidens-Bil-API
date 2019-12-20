@@ -1,4 +1,5 @@
-﻿using Fremtidens_Bil_API.Objects;
+﻿using Fremtidens_Bil_API.Models;
+using Fremtidens_Bil_API.Objects;
 
 namespace Fremtidens_Bil_API.Interfaces
 {

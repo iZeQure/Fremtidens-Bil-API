@@ -1,4 +1,6 @@
-﻿namespace Fremtidens_Bil_API.Objects
+﻿using Fremtidens_Bil_API.Objects;
+
+namespace Fremtidens_Bil_API.Models
 {
     /// <summary>
     /// Base of User Entity
@@ -36,6 +38,16 @@
         /// The account locked
         /// </summary>
         private bool accountLocked;
+
+        /// <summary>
+        /// The contact
+        /// </summary>
+        private Contact contact;
+
+        /// <summary>
+        /// The credential
+        /// </summary>
+        private Credential credential;
         #endregion
 
         #region Properties        
@@ -86,6 +98,22 @@
         ///   <c>true</c> if [account locked]; otherwise, <c>false</c>.
         /// </value>
         public bool AccountLocked { get { return accountLocked; } set { accountLocked = value; } }
+
+        /// <summary>
+        /// Gets or sets the contact.
+        /// </summary>
+        /// <value>
+        /// The contact.
+        /// </value>
+        public Contact Contact { get { return contact; } set { contact = value; } }
+
+        /// <summary>
+        /// Gets or sets the credential.
+        /// </summary>
+        /// <value>
+        /// The credential.
+        /// </value>
+        public Credential Credential { get { return credential; } set { credential = value; } }
         #endregion
     }
 }
