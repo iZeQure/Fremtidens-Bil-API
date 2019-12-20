@@ -12,6 +12,8 @@ namespace Fremtidens_Bil_API.Data
 {
     public class UserRepository : IUserRepository
     {
+        private Database _db = Database.Instance;
+
         public bool AuthenticateUser(User user)
         {
             throw new NotImplementedException();
@@ -34,7 +36,6 @@ namespace Fremtidens_Bil_API.Data
 
         public List<User> GetAll()
         {
-            Database _db = Database.Instance;
             List<User> users = new List<User>();
 
             using SqlConnection conn = _db.Connection;
@@ -45,28 +46,28 @@ namespace Fremtidens_Bil_API.Data
                 {
                     CommandType = System.Data.CommandType.StoredProcedure
                 };
-                using SqlDataReader dataReader = cmd.ExecuteReader();
+                using SqlDataReader sqlData = cmd.ExecuteReader();
 
-                while (dataReader.Read())
+                while (sqlData.Read())
                 {
                     User u = new User()
                     {
-                        Id = (string)dataReader[0],
-                        UserName = (string)dataReader[1],
-                        FirstName = (string)dataReader[2],
-                        LastName = (string)dataReader[3],
-                        FingerPrintId = (int)dataReader[4],
-                        HeartRate = (int)dataReader[5],
-                        AccountLocked = (bool)dataReader[6],
+                        Id = (string)sqlData[0],
+                        UserName = (string)sqlData[1],
+                        FirstName = (string)sqlData[2],
+                        LastName = (string)sqlData[3],
+                        FingerPrintId = (int)sqlData[4],
+                        HeartRate = (int)sqlData[5],
+                        AccountLocked = (bool)sqlData[6],
                         Contact = new Contact
                         {
-                            Id = (string)dataReader[0],
-                            PhoneNumber = (string)dataReader[7]
+                            Id = (string)sqlData[0],
+                            PhoneNumber = (string)sqlData[7]
                         },
                         Credential = new Credential
                         {
-                            Id = (string)dataReader[0],
-                            MailAddress = (string)dataReader[8]
+                            Id = (string)sqlData[0],
+                            MailAddress = (string)sqlData[8]
                         }
                     };
 
@@ -76,9 +77,48 @@ namespace Fremtidens_Bil_API.Data
             }
         }
 
-        public User GetById(int id)
+        public User GetById(string id)
         {
-            throw new NotImplementedException();
+            User user = null;
+
+            using SqlConnection conn = _db.Connection;
+            {
+                conn.Open();
+
+                using SqlCommand cmd = new SqlCommand("GETUserById", conn)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.AddWithValue($"@CprNumber", id);
+
+                using SqlDataReader sqlData = cmd.ExecuteReader();
+
+                while (sqlData.Read())
+                {
+                    user = new User()
+                    {
+                        Id = (string)sqlData[0],
+                        UserName = (string)sqlData[1],
+                        FirstName = (string)sqlData[2],
+                        LastName = (string)sqlData[3],
+                        FingerPrintId = (int)sqlData[4],
+                        HeartRate = (int)sqlData[5],
+                        AccountLocked = (bool)sqlData[6],
+                        Contact = new Contact
+                        {
+                            Id = (string)sqlData[0],
+                            PhoneNumber = (string)sqlData[7]
+                        },
+                        Credential = new Credential
+                        {
+                            Id = (string)sqlData[0],
+                            MailAddress = (string)sqlData[8]
+                        }
+                    };
+                }
+                return user;
+            }
         }
 
         public void Login(User user)

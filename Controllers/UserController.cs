@@ -23,9 +23,10 @@ namespace Fremtidens_Bil_API.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public User Get(string id)
         {
-            return "value";
+            UserRepository userRepository = new UserRepository();
+            return userRepository.GetById(id);
         }
 
         // POST: api/User
