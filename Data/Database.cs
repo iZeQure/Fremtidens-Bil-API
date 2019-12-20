@@ -12,18 +12,25 @@ namespace Fremtidens_Bil_API.Data
     {
         private static Database instance = null;
         private SqlConnection connection;
-        private string connectionString;
+        private string connectionString = $"Data Source=10.108.226.9; Initial Catalog=CybertruckCentral; User Id=sa; Password=Passw0rd;";
 
         public SqlConnection Connection { get { return connection; } set { connection = value; } }
 
         private string ConnectionString { get { return connectionString; } set { connectionString = value; } }
 
+
+        public SqlConnection GetConn()
+        {
+            Connection = new SqlConnection(ConnectionString);
+            return Connection;
+
+        }
+
         private Database()
         {
             try
             {
-                ConnectionString = $"Data Source=10.108.226.9; Initial Catalog=CybertruckCentral; User Id=sa; Password=Passw0rd;";
-                Connection = new SqlConnection(ConnectionString);
+                
             }            
             catch (NullReferenceException ex)
             {

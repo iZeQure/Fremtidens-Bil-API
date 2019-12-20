@@ -22,12 +22,12 @@ namespace Fremtidens_Bil_API.Controllers
         }
 
         // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
-        public User Get(string id)
-        {
-            UserRepository userRepository = new UserRepository();
-            return userRepository.GetById(id);
-        }
+        //[HttpGet("{id}", Name = "Get")]
+        //public User Get(string id)
+        //{
+        //    UserRepository userRepository = new UserRepository();
+        //    return userRepository.GetById(id);
+        //}
 
         // POST: api/User
         [HttpPost]
@@ -48,7 +48,7 @@ namespace Fremtidens_Bil_API.Controllers
         {
         }
 
-        [HttpGet(Name = "Check")]
+        [HttpGet("{id}", Name = "Check")]
         public bool CheckUserExist(string id)
         {
             UserRepository ur = new UserRepository();

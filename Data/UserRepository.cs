@@ -12,8 +12,6 @@ namespace Fremtidens_Bil_API.Data
 {
     public class UserRepository : IUserRepository
     {
-        private Database _db = Database.Instance;
-
         public bool AuthenticateUser(User user)
         {
             throw new NotImplementedException();
@@ -21,9 +19,11 @@ namespace Fremtidens_Bil_API.Data
 
         public bool CheckUserExists(User user)
         {
-            
-            using SqlConnection conn = _db.Connection;
+            Database db = Database.Instance;
+
+            using SqlConnection conn = db.GetConn();
             {
+                //conn.ConnectionString = $"Data Source=10.108.226.9; Initial Catalog=CybertruckCentral; User Id=sa; Password=Passw0rd;";
                 conn.Open();
 
                 using SqlCommand cmd = new SqlCommand("GETCheckUserExist", conn)
@@ -31,15 +31,12 @@ namespace Fremtidens_Bil_API.Data
                     CommandType = System.Data.CommandType.StoredProcedure
                 };
                 cmd.Parameters.AddWithValue("@CprNumber", user.Id);
-                int result = cmd.ExecuteNonQuery();
-                if (result == 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+
+                using SqlDataReader sqlData = cmd.ExecuteReader();
+
+                if (sqlData.HasRows) return true;
+
+                return false;
             }
         }
 
@@ -55,88 +52,107 @@ namespace Fremtidens_Bil_API.Data
 
         public List<User> GetAll()
         {
+            Database db = Database.Instance;
+
             List<User> users = new List<User>();
 
-            using SqlConnection conn = _db.Connection;
+            using SqlConnection conn = db.GetConn();
             {
-                conn.Open();
-
-                using SqlCommand cmd = new SqlCommand("GETAllUsers", conn)
+                try
                 {
-                    CommandType = System.Data.CommandType.StoredProcedure
-                };
-                using SqlDataReader sqlData = cmd.ExecuteReader();
+                    conn.Open();
 
-                while (sqlData.Read())
-                {
-                    User u = new User()
+                    using SqlCommand cmd = new SqlCommand("GETAllUsers", conn)
                     {
-                        Id = (string)sqlData[0],
-                        UserName = (string)sqlData[1],
-                        FirstName = (string)sqlData[2],
-                        LastName = (string)sqlData[3],
-                        FingerPrintId = (int)sqlData[4],
-                        HeartRate = (int)sqlData[5],
-                        AccountLocked = (bool)sqlData[6],
-                        Contact = new Contact
-                        {
-                            Id = (string)sqlData[0],
-                            PhoneNumber = (string)sqlData[7]
-                        },
-                        Credential = new Credential
-                        {
-                            Id = (string)sqlData[0],
-                            MailAddress = (string)sqlData[8]
-                        }
+                        CommandType = System.Data.CommandType.StoredProcedure
                     };
+                    using SqlDataReader sqlData = cmd.ExecuteReader();
 
-                    users.Add(u);
+                    while (sqlData.Read())
+                    {
+                        User u = new User()
+                        {
+                            Id = (string)sqlData[0],
+                            UserName = (string)sqlData[1],
+                            FirstName = (string)sqlData[2],
+                            LastName = (string)sqlData[3],
+                            FingerPrintId = (int)sqlData[4],
+                            HeartRate = (int)sqlData[5],
+                            AccountLocked = (bool)sqlData[6],
+                            Contact = new Contact
+                            {
+                                Id = (string)sqlData[0],
+                                PhoneNumber = (string)sqlData[7]
+                            },
+                            Credential = new Credential
+                            {
+                                Id = (string)sqlData[0],
+                                MailAddress = (string)sqlData[8]
+                            }
+                        };
+
+                        users.Add(u);
+                    }
+                    return users;
                 }
-                return users;
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
             }
         }
 
         public User GetById(string id)
         {
+            Database db = Database.Instance;
             User user = null;
 
-            using SqlConnection conn = _db.Connection;
+            using SqlConnection conn = db.GetConn();
             {
-                conn.Open();
-
-                using SqlCommand cmd = new SqlCommand("GETUserById", conn)
+                try
                 {
-                    CommandType = System.Data.CommandType.StoredProcedure
-                };
+                    conn.Open();
 
-                cmd.Parameters.AddWithValue($"@CprNumber", id);
-
-                using SqlDataReader sqlData = cmd.ExecuteReader();
-
-                while (sqlData.Read())
-                {
-                    user = new User()
+                    using SqlCommand cmd = new SqlCommand("GETUserById", conn)
                     {
-                        Id = (string)sqlData[0],
-                        UserName = (string)sqlData[1],
-                        FirstName = (string)sqlData[2],
-                        LastName = (string)sqlData[3],
-                        FingerPrintId = (int)sqlData[4],
-                        HeartRate = (int)sqlData[5],
-                        AccountLocked = (bool)sqlData[6],
-                        Contact = new Contact
-                        {
-                            Id = (string)sqlData[0],
-                            PhoneNumber = (string)sqlData[7]
-                        },
-                        Credential = new Credential
-                        {
-                            Id = (string)sqlData[0],
-                            MailAddress = (string)sqlData[8]
-                        }
+                        CommandType = System.Data.CommandType.StoredProcedure
                     };
+
+                    cmd.Parameters.AddWithValue($"@CprNumber", id);
+
+                    using SqlDataReader sqlData = cmd.ExecuteReader();
+
+                    while (sqlData.Read())
+                    {
+                        user = new User()
+                        {
+                            Id = (string)sqlData[0],
+                            UserName = (string)sqlData[1],
+                            FirstName = (string)sqlData[2],
+                            LastName = (string)sqlData[3],
+                            FingerPrintId = (int)sqlData[4],
+                            HeartRate = (int)sqlData[5],
+                            AccountLocked = (bool)sqlData[6],
+                            Contact = new Contact
+                            {
+                                Id = (string)sqlData[0],
+                                PhoneNumber = (string)sqlData[7]
+                            },
+                            Credential = new Credential
+                            {
+                                Id = (string)sqlData[0],
+                                MailAddress = (string)sqlData[8]
+                            }
+                        };
+                    }
+                    return user;
                 }
-                return user;
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
             }
         }
 
