@@ -47,5 +47,16 @@ namespace Fremtidens_Bil_API.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpGet(Name = "Check")]
+        public bool CheckUserExist(string id)
+        {
+            UserRepository ur = new UserRepository();
+            User u = new User()
+            {
+                Id = id
+            };
+            return ur.CheckUserExists(u);
+        }
     }
 }

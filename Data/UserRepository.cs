@@ -21,7 +21,26 @@ namespace Fremtidens_Bil_API.Data
 
         public bool CheckUserExists(User user)
         {
-            throw new NotImplementedException();
+            
+            using SqlConnection conn = _db.Connection;
+            {
+                conn.Open();
+
+                using SqlCommand cmd = new SqlCommand("GETCheckUserExist", conn)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@CprNumber", user.Id);
+                int result = cmd.ExecuteNonQuery();
+                if (result == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
         }
 
         public void Create(User createEntity)
