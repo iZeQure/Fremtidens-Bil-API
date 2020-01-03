@@ -9,6 +9,5 @@ namespace Fremtidens_Bil_API.Interfaces
         void Update(T updateEntity);
         void Delete(T deleteEntity);
         T GetById(string id);
-        List<T> GetAll();
     }
 }

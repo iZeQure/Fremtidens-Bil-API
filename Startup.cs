@@ -48,6 +48,7 @@ namespace Fremtidens_Bil_API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

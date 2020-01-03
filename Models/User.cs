@@ -35,11 +35,6 @@ namespace Fremtidens_Bil_API.Models
         private int heartRate;
 
         /// <summary>
-        /// The account locked
-        /// </summary>
-        private bool accountLocked;
-
-        /// <summary>
         /// The contact
         /// </summary>
         private Contact contact;
@@ -89,15 +84,7 @@ namespace Fremtidens_Bil_API.Models
         /// <value>
         /// The heart rate.
         /// </value>
-        public int HeartRate { get { return heartRate; } set { heartRate = value; } }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [account locked].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [account locked]; otherwise, <c>false</c>.
-        /// </value>
-        public bool AccountLocked { get { return accountLocked; } set { accountLocked = value; } }
+        public int HeartRate { get { return heartRate; } set { heartRate = value; } }        
 
         /// <summary>
         /// Gets or sets the contact.

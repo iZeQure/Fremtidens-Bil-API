@@ -17,6 +17,11 @@
         /// The password
         /// </summary>
         private string password;
+
+        /// <summary>
+        /// The account locked
+        /// </summary>
+        private bool accountLocked;
         #endregion
 
         #region Properties        
@@ -35,6 +40,14 @@
         /// The password.
         /// </value>
         public string Password { get { return password; } set { password = value; } }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [account locked].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [account locked]; otherwise, <c>false</c>.
+        /// </value>
+        public bool AccountLocked { get { return accountLocked; } set { accountLocked = value; } }
         #endregion
     }
 }

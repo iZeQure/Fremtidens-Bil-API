@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Fremtidens_Bil_API.Data;
 using Fremtidens_Bil_API.Models;
@@ -10,45 +12,39 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fremtidens_Bil_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/{controller}/{action}")]
     public class UserController : ControllerBase
     {
-        // GET: api/User
-        [HttpGet(Name = "GetAll")]
-        public List<User> GetAllUsers()
+        //GET: api/User/id/1234567890
+        [HttpGet("{id}")]
+        [ActionName("id")]
+        public string[] Get(string id)
         {
-            UserRepository _userRepository = new UserRepository();
-            return _userRepository.GetAll();
-        }
+            UserRepository userRepository = new UserRepository();
+            var user = userRepository.GetById(id);
+            string[] userProps = new string[]
+            {
+                user.Id,
+                user.UserName,
+                user.FirstName,
+                user.LastName,
+                user.Contact.PhoneNumber,
+                user.Credential.MailAddress,
+            };
 
-        // GET: api/User/5
-        //[HttpGet("{id}", Name = "Get")]
-        //public User Get(string id)
-        //{
-        //    UserRepository userRepository = new UserRepository();
-        //    return userRepository.GetById(id);
-        //}
-
-        // POST: api/User
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-            Debug.WriteLine("asd");
-        }
-
-        // PUT: api/User/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            return userProps;
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [ActionName("delete")]
         public void Delete(int id)
         {
         }
 
-        [HttpGet("{id}", Name = "Check")]
+        //GET: api/user/check/1234567890
+        [HttpGet("{id}")]
+        [ActionName("check")]
         public bool CheckUserExist(string id)
         {
             UserRepository ur = new UserRepository();
@@ -56,6 +52,7 @@ namespace Fremtidens_Bil_API.Controllers
             {
                 Id = id
             };
+
             return ur.CheckUserExists(u);
         }
     }
