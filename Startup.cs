@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 namespace Fremtidens_Bil_API
 {
@@ -23,11 +24,24 @@ namespace Fremtidens_Bil_API
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AngularProject",
+                builder =>
+                {
+                    builder.WithOrigins("http://10.108.226.9",
+                                        "http://CyberServer.local")
+                    .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
             services.AddControllers();
         }
 
@@ -44,6 +58,8 @@ namespace Fremtidens_Bil_API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

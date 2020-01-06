@@ -7,15 +7,17 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Fremtidens_Bil_API.Data;
 using Fremtidens_Bil_API.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fremtidens_Bil_API.Controllers
 {
-    [Route("api/{controller}/{action}")]
+    [Route("{controller}/{action}")]
     public class UserController : ControllerBase
     {
         //GET: api/User/id/1234567890
+        [EnableCors("AngularProject")]
         [HttpGet("{id}")]
         [ActionName("id")]
         public string[] Get(string id)
@@ -36,6 +38,7 @@ namespace Fremtidens_Bil_API.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
+        [EnableCors("AngularProject")]
         [HttpDelete("{id}")]
         [ActionName("delete")]
         public void Delete(int id)
@@ -43,6 +46,7 @@ namespace Fremtidens_Bil_API.Controllers
         }
 
         //GET: api/user/check/1234567890
+        [EnableCors("AngularProject")]
         [HttpGet("{id}")]
         [ActionName("check")]
         public bool CheckUserExist(string id)

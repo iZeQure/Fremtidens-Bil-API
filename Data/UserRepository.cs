@@ -41,7 +41,7 @@ namespace Fremtidens_Bil_API.Data
 
                 cmd.ExecuteNonQuery();
 
-                return (bool)Convert.ToBoolean(cmd.Parameters[0].Value);
+                return (bool)Convert.ToBoolean(cmd.Parameters[1].Value);
             };
         }
 

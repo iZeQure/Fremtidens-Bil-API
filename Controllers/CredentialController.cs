@@ -4,16 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Fremtidens_Bil_API.Data;
 using Fremtidens_Bil_API.Objects;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fremtidens_Bil_API.Controllers
 {
-    [Route("api/{controller}/{action}")]
+    [Route("{controller}/{action}")]
     [ApiController]
     public class CredentialController : ControllerBase
     {
         //GET: api/credential/authcredential/mail/password
+        [EnableCors("AngularProject")]
         [HttpGet("{mSecret}/{pSecret}")]
         [ActionName("authCredential")]
         public bool ValidateCredential(string mSecret, string pSecret)
@@ -30,6 +32,7 @@ namespace Fremtidens_Bil_API.Controllers
         }
 
         //GET: api/credential/authaccount/mail
+        [EnableCors("AngularProject")]
         [HttpGet("{mSecret}")]
         [ActionName("authAccount")]
         public bool ValidateAccount(string mSecret)
@@ -45,6 +48,7 @@ namespace Fremtidens_Bil_API.Controllers
         }
 
         //GET: api/credential/validate/mail
+        [EnableCors("AngularProject")]
         [HttpGet("{mSecret}")]
         [ActionName("validate")]
         public bool CheckEmailExists(string mSecret)
