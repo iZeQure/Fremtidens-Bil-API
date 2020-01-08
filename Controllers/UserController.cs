@@ -16,28 +16,55 @@ namespace Fremtidens_Bil_API.Controllers
     [Route("{controller}/{action}")]
     public class UserController : ControllerBase
     {
-        //GET: api/User/id/1234567890
+        //GET: user/id/1234567890
         [EnableCors("AngularProject")]
         [HttpGet("{id}")]
         [ActionName("id")]
-        public string[] Get(string id)
+        public ActionResult<User> Get(string id)
         {
             UserRepository userRepository = new UserRepository();
-            var user = userRepository.GetById(id);
-            string[] userProps = new string[]
+            try
             {
+                var user = userRepository.GetById(id);
+                string[] userProps = new string[]
+                {
                 user.Id,
                 user.UserName,
                 user.FirstName,
                 user.LastName,
                 user.Contact.PhoneNumber,
                 user.Credential.MailAddress,
-            };
+                };
 
-            return userProps;
+                if (userProps != null) return Ok(userProps);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            return NotFound();
         }
 
-        // DELETE: api/ApiWithActions/5
+        [EnableCors("AngularProject")]
+        [HttpPost]
+        [ActionName("create")]
+        public ActionResult<User> Create(User user)
+        {
+            UserRepository userRepository = new UserRepository();
+
+            bool userExists = userRepository.Create(user);
+
+            if (userExists != false)
+            {
+                return Ok(userExists);
+            }
+            else
+            {
+                return Conflict(userExists);
+            }
+        }
+
+        // DELETE: ApiWithActions/5
         [EnableCors("AngularProject")]
         [HttpDelete("{id}")]
         [ActionName("delete")]
@@ -45,7 +72,7 @@ namespace Fremtidens_Bil_API.Controllers
         {
         }
 
-        //GET: api/user/check/1234567890
+        //GET: user/check/1234567890
         [EnableCors("AngularProject")]
         [HttpGet("{id}")]
         [ActionName("check")]

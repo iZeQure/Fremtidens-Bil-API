@@ -162,9 +162,45 @@ namespace Fremtidens_Bil_API.Data
             }
         }
 
-        public void Create(User createEntity)
+        public bool Create(User user)
         {
-            throw new NotImplementedException();
+            // check if the user id already exists..
+            bool userIdExists = CheckUserExists(user);
+            bool credentialEmailExists = CheckMailExists(user.Credential);
+
+            if (!userIdExists && !credentialEmailExists)
+            {
+                Database db = Database.Instance;
+
+                using SqlConnection conn = db.GetConn();
+                {
+                    conn.Open();
+
+                    using SqlCommand cmd = new SqlCommand("POST_User", conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    // User properties
+                    cmd.Parameters.AddWithValue("@CprNumber", user.Id).Direction = ParameterDirection.Input;
+                    cmd.Parameters.AddWithValue("@UserName", user.UserName).Direction = ParameterDirection.Input;
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName).Direction = ParameterDirection.Input;
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName).Direction = ParameterDirection.Input;
+                    cmd.Parameters.AddWithValue("@FingerPrintId", user.FingerPrintId).Direction = ParameterDirection.Input;
+
+                    // Contact properties
+                    cmd.Parameters.AddWithValue("@PhoneNumber", user.Contact.PhoneNumber).Direction = ParameterDirection.Input;
+
+                    // Credential Properties
+                    cmd.Parameters.AddWithValue("@MailAddress", user.Credential.MailAddress).Direction = ParameterDirection.Input;
+                    cmd.Parameters.AddWithValue("@Password", user.Credential.Password).Direction = ParameterDirection.Input;
+
+                    cmd.ExecuteNonQuery();
+
+                    return true;
+                }                
+            }
+            return false;
         }
 
         public void Delete(User deleteEntity)

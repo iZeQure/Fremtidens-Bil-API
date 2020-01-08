@@ -14,7 +14,7 @@ namespace Fremtidens_Bil_API.Controllers
     [ApiController]
     public class CredentialController : ControllerBase
     {
-        //GET: api/credential/authcredential/mail/password
+        //GET: credential/authcredential/mail/password
         [EnableCors("AngularProject")]
         [HttpGet("{mSecret}/{pSecret}")]
         [ActionName("authCredential")]
@@ -31,7 +31,7 @@ namespace Fremtidens_Bil_API.Controllers
             return userRepository.AuthenticateCredentials(credential);
         }
 
-        //GET: api/credential/authaccount/mail
+        //GET: credential/authaccount/mail
         [EnableCors("AngularProject")]
         [HttpGet("{mSecret}")]
         [ActionName("authAccount")]
@@ -47,7 +47,7 @@ namespace Fremtidens_Bil_API.Controllers
             return userRepository.AuthenticateAccount(credential);
         }
 
-        //GET: api/credential/validate/mail
+        //GET: credential/validate/mail
         [EnableCors("AngularProject")]
         [HttpGet("{mSecret}")]
         [ActionName("validate")]
