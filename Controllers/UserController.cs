@@ -45,6 +45,7 @@ namespace Fremtidens_Bil_API.Controllers
             return NotFound();
         }
 
+        //POST: user/create
         [EnableCors("AngularProject")]
         [HttpPost]
         [ActionName("create")]

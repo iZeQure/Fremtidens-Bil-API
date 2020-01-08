@@ -162,6 +162,13 @@ namespace Fremtidens_Bil_API.Data
             }
         }
 
+        /// <summary>
+        /// Creates the specified user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>
+        /// Return bool wether it succeeded or not. TRUE | FALSE
+        /// </returns>
         public bool Create(User user)
         {
             // check if the user id already exists..
