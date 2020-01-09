@@ -57,11 +57,11 @@ namespace Fremtidens_Bil_API.Controllers
 
             if (userExists != false)
             {
-                return Ok(userExists);
+                return Ok("User Registered!");
             }
             else
             {
-                return Conflict(userExists);
+                return Conflict($"User already exists!");
             }
         }
 

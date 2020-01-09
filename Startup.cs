@@ -37,7 +37,8 @@ namespace Fremtidens_Bil_API
                 builder =>
                 {
                     builder.WithOrigins("http://10.108.226.9",
-                                        "http://CyberServer.local")
+                                        "http://CyberServer.local",
+                                        "http://localhost:4200")
                     .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });

@@ -58,22 +58,22 @@ namespace Fremtidens_Bil_API.Data
         /// <param name="credential"></param>
         /// <seealso cref="Credential"/>
         /// <returns><see cref="bool"/></returns>
-        public bool AuthenticateCredentials(Credential credential)
+        public bool AuthenticateCredentials(User user)
         {
             Database db = Database.Instance;
             using SqlConnection conn = db.GetConn();
             {
                 conn.Open();
 
-                using SqlCommand cmd = new SqlCommand("GET_ValidateCredential", conn)
+                using SqlCommand cmd = new SqlCommand("GET_AuthenticateLoginCredential", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.AddWithValue("@Mail", credential.MailAddress)
+                cmd.Parameters.AddWithValue("@Mail", user.Credential.MailAddress)
                     .Direction = ParameterDirection.Input;
 
-                cmd.Parameters.AddWithValue("@Password", credential.Password)
+                cmd.Parameters.AddWithValue("@Password", user.Credential.Password)
                     .Direction = ParameterDirection.Input;
 
                 cmd.Parameters.Add("@ReturnValue", SqlDbType.Bit)

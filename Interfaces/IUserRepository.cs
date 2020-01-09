@@ -7,7 +7,7 @@ namespace Fremtidens_Bil_API.Interfaces
     {
         bool CheckUserExists(User user);
         bool CheckMailExists(Credential credential);
-        bool AuthenticateCredentials(Credential credential);
+        bool AuthenticateCredentials(User user);
         bool AuthenticateAccount(Credential credential);
     }
 }

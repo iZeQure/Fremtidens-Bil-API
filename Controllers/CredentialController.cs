@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fremtidens_Bil_API.Data;
+using Fremtidens_Bil_API.Models;
 using Fremtidens_Bil_API.Objects;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -11,24 +12,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fremtidens_Bil_API.Controllers
 {
     [Route("{controller}/{action}")]
-    [ApiController]
     public class CredentialController : ControllerBase
     {
-        //GET: credential/authcredential/mail/password
+        //POST: credential/login
         [EnableCors("AngularProject")]
-        [HttpGet("{mSecret}/{pSecret}")]
-        [ActionName("authCredential")]
-        public bool ValidateCredential(string mSecret, string pSecret)
+        [HttpPost]
+        [ActionName("login")]
+        public ActionResult<User> AuthenticateLoginCredential(User user)
         {
             UserRepository userRepository = new UserRepository();
 
-            Credential credential = new Credential()
-            {
-                MailAddress = mSecret,
-                Password = pSecret
-            };
+            bool authLogin = userRepository.AuthenticateCredentials(user);
 
-            return userRepository.AuthenticateCredentials(credential);
+            return Ok(authLogin);
         }
 
         //GET: credential/authaccount/mail
