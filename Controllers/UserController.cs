@@ -25,7 +25,7 @@ namespace Fremtidens_Bil_API.Controllers
             UserRepository userRepository = new UserRepository();
             try
             {
-                var user = userRepository.GetById(id);
+                User user = userRepository.GetById(id);
                 string[] userProps = new string[]
                 {
                 user.Id,
@@ -55,14 +55,7 @@ namespace Fremtidens_Bil_API.Controllers
 
             bool userExists = userRepository.Create(user);
 
-            if (userExists != false)
-            {
-                return Ok("User Registered!");
-            }
-            else
-            {
-                return Conflict($"User already exists!");
-            }
+            return Ok(userExists);
         }
 
         // DELETE: ApiWithActions/5
@@ -85,7 +78,7 @@ namespace Fremtidens_Bil_API.Controllers
                 Id = id
             };
 
-            return ur.CheckUserExists(u);
+            return ur.Check_CPRNumberExists(u);
         }
     }
 }

@@ -21,19 +21,19 @@ namespace Fremtidens_Bil_API.Data
         /// <param name="credential"></param>
         /// <seealso cref="Credential"/>
         /// <returns><see cref="bool"/></returns>
-        public bool AuthenticateAccount(Credential credential)
+        public bool Authenticate_AccountLock(User user)
         {
             Database db = Database.Instance;
             using SqlConnection conn = db.GetConn();
             {
                 conn.Open();
 
-                using SqlCommand cmd = new SqlCommand("GET_ValidateAccount", conn)
+                using SqlCommand cmd = new SqlCommand("GET_AuthenticateAccountLock", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.AddWithValue("@Mail", credential.MailAddress)
+                cmd.Parameters.AddWithValue("@Mail", user.Credential.MailAddress)
                     .Direction = ParameterDirection.Input;
 
                 cmd.Parameters.Add("@ReturnValue", SqlDbType.Bit)
@@ -43,6 +43,11 @@ namespace Fremtidens_Bil_API.Data
 
                 return (bool)Convert.ToBoolean(cmd.Parameters[1].Value);
             };
+        }
+
+        public void Authenticate_DisableAccount(User user)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -58,14 +63,14 @@ namespace Fremtidens_Bil_API.Data
         /// <param name="credential"></param>
         /// <seealso cref="Credential"/>
         /// <returns><see cref="bool"/></returns>
-        public bool AuthenticateCredentials(User user)
+        public bool Authenticate_LoginCredentials(User user)
         {
             Database db = Database.Instance;
             using SqlConnection conn = db.GetConn();
             {
                 conn.Open();
 
-                using SqlCommand cmd = new SqlCommand("GET_AuthenticateLoginCredential", conn)
+                using SqlCommand cmd = new SqlCommand("POST_AuthenticateLoginCredential", conn)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -97,7 +102,7 @@ namespace Fremtidens_Bil_API.Data
         /// <param name="user"></param>
         /// <seealso cref="User"/>
         /// <returns><see cref="bool"/></returns>
-        public bool CheckUserExists(User user)
+        public bool Check_CPRNumberExists(User user)
         {
             Database db = Database.Instance;
             using SqlConnection conn = db.GetConn();
@@ -137,7 +142,7 @@ namespace Fremtidens_Bil_API.Data
         /// <param name="credential"></param>
         /// <seealso cref="Credential"/>
         /// <returns><see cref="bool"/></returns>
-        public bool CheckMailExists(Credential credential)
+        public bool Check_EmailAddressExists(User user)
         {
             Database db = Database.Instance;
             using SqlConnection conn = db.GetConn();
@@ -149,7 +154,7 @@ namespace Fremtidens_Bil_API.Data
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.AddWithValue("@Mail", credential.MailAddress)
+                cmd.Parameters.AddWithValue("@Mail", user.Credential.MailAddress)
                     .Direction = ParameterDirection.Input;
 
                 cmd.Parameters.Add("@ReturnValue", SqlDbType.Bit)
@@ -172,8 +177,8 @@ namespace Fremtidens_Bil_API.Data
         public bool Create(User user)
         {
             // check if the user id already exists..
-            bool userIdExists = CheckUserExists(user);
-            bool credentialEmailExists = CheckMailExists(user.Credential);
+            bool userIdExists = Check_CPRNumberExists(user);
+            bool credentialEmailExists = Check_EmailAddressExists(user);
 
             if (!userIdExists && !credentialEmailExists)
             {
@@ -205,7 +210,7 @@ namespace Fremtidens_Bil_API.Data
                     cmd.ExecuteNonQuery();
 
                     return true;
-                }                
+                }
             }
             return false;
         }
@@ -275,7 +280,60 @@ namespace Fremtidens_Bil_API.Data
             }
         }
 
+        public User Return_FingerPrintIdFromUserId(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public User Return_HeartBeatFromUserId(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public User Return_UserCredentialIdFromMailAddress(User user)
+        {
+            Database db = Database.Instance;
+            using SqlConnection conn = db.GetConn();
+            conn.Open();
+
+            using SqlCommand cmd = new SqlCommand("GET_UserIdFromMail", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.AddWithValue("@MailAddress", user.Credential.MailAddress).Direction = ParameterDirection.Input;
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                string credentialId = reader.GetString(0);
+
+                User returnUser = new User()
+                {
+                    Credential = new Credential()
+                    {
+                        Id = credentialId
+                    }
+                };
+
+                return (User)returnUser;
+            }
+
+            return null;
+        }
+
+        public User Return_UserInformationByMailAddress(User user)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(User updateEntity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update_HeartBeatFromFingerPrintId(User user)
         {
             throw new NotImplementedException();
         }
