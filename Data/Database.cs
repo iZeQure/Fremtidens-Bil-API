@@ -12,7 +12,7 @@ namespace Fremtidens_Bil_API.Data
     {
         private static Database instance = null;
         private SqlConnection connection;
-        private string connectionString = $"Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=CybertruckCentral; Integrated Security=true;";
+        private string connectionString = $"Data Source=10.108.226.9; Initial Catalog=CybertruckCentral; User Id=sa; Password=Passw0rd;";
 
         public SqlConnection Connection { get { return connection; } set { connection = value; } }
 
