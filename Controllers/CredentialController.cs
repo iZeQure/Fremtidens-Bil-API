@@ -1,4 +1,5 @@
 ﻿using Fremtidens_Bil_API.Data;
+using Fremtidens_Bil_API.Interfaces;
 using Fremtidens_Bil_API.Models;
 using Fremtidens_Bil_API.Objects;
 using Microsoft.AspNetCore.Cors;
@@ -13,13 +14,14 @@ namespace Fremtidens_Bil_API.Controllers
         [EnableCors("AngularProject")]
         [HttpPost]
         [ActionName("login")]
-        public ActionResult<User> AuthenticateLoginCredential(User user)
+        public JsonResult AuthenticateLoginCredential(User user)
         {
             UserRepository userRepository = new UserRepository();
 
             bool authLogin = userRepository.Authenticate_LoginCredentials(user);
 
-            return Ok(authLogin);
+            //return Ok(authLogin);
+            return new JsonResult(authLogin);
         }
 
         //GET: credential/authaccount/mail
