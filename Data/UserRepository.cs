@@ -3,6 +3,7 @@ using Fremtidens_Bil_API.Models;
 using Fremtidens_Bil_API.Objects;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Configuration;
 using System.Data;
 
 namespace Fremtidens_Bil_API.Data
@@ -66,28 +67,47 @@ namespace Fremtidens_Bil_API.Data
         public bool Authenticate_LoginCredentials(User user)
         {
             Database db = Database.Instance;
-            using SqlConnection conn = db.GetConn();
+            try
             {
-                conn.Open();
-
-                using SqlCommand cmd = new SqlCommand("POST_AuthenticateLoginCredential", conn)
+                using SqlConnection conn = db.GetConn();
                 {
-                    CommandType = CommandType.StoredProcedure
+                    conn.Open();
+
+                    using SqlCommand cmd = new SqlCommand("POST_AuthenticateLoginCredential", conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+
+                    cmd.Parameters.AddWithValue("@Mail", user.Credential.MailAddress)
+                        .Direction = ParameterDirection.Input;
+
+                    cmd.Parameters.AddWithValue("@Password", user.Credential.Password)
+                        .Direction = ParameterDirection.Input;
+
+                    cmd.Parameters.Add("@ReturnValue", SqlDbType.Bit)
+                        .Direction = ParameterDirection.ReturnValue;
+
+                    cmd.ExecuteNonQuery();
+
+                    return (bool)Convert.ToBoolean(cmd.Parameters[2].Value);
                 };
-
-                cmd.Parameters.AddWithValue("@Mail", user.Credential.MailAddress)
-                    .Direction = ParameterDirection.Input;
-
-                cmd.Parameters.AddWithValue("@Password", user.Credential.Password)
-                    .Direction = ParameterDirection.Input;
-
-                cmd.Parameters.Add("@ReturnValue", SqlDbType.Bit)
-                    .Direction = ParameterDirection.ReturnValue;
-
-                cmd.ExecuteNonQuery();
-
-                return (bool)Convert.ToBoolean(cmd.Parameters[2].Value);
-            };
+            }
+            catch (SqlException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+            catch (ConfigurationErrorsException)
+            {
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>
